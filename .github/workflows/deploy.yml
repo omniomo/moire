@@ -41,7 +41,8 @@ jobs:
           cache: "pnpm"
 
       - name: Inject Memos from memos branch
-        if: github.repository == 'moirelog/moire'
+        # The official app repository ID stays the same after transfers.
+        if: github.event.repository.id == 1147685883
         run: |
           git fetch origin memos
           git checkout origin/memos -- src/memos || echo "Memos branch not found or empty"

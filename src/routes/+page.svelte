@@ -14,7 +14,7 @@
 <div class="min-h-screen bg-white font-sans p-4 md:p-8">
     <header class="mb-12 text-center">
         <h1 class="text-4xl font-bold tracking-tight text-gray-900">
-          <a href="https://docs.moire.blog" target="_blank" class="text-zinc-300 hover:bg-gray-100 transition-colors cursor-pointer bg-gray-50 px-2 rounded-lg">Moire</a>
+          <a href="https://moire-docs.ooooomo.com" target="_blank" class="text-zinc-300 hover:bg-gray-100 transition-colors cursor-pointer bg-gray-50 px-2 rounded-lg">Moire</a>
           Themes</h1>
     </header>
 
