@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { config } from '../../moire.config';
+    import { resolve } from '$app/paths';
 
     const themes = [
         'classic',
@@ -14,7 +14,7 @@
 <div class="min-h-screen bg-white font-sans p-4 md:p-8">
     <header class="mb-12 text-center">
         <h1 class="text-4xl font-bold tracking-tight text-gray-900">
-          <a href="https://moire-docs.ooooomo.com" target="_blank" class="text-zinc-300 hover:bg-gray-100 transition-colors cursor-pointer bg-gray-50 px-2 rounded-lg">Moire</a>
+          <a href="https://moire.ooooomo.com/docs/" target="_blank" class="text-zinc-300 hover:bg-gray-100 transition-colors cursor-pointer bg-gray-50 px-2 rounded-lg">Moire</a>
           Themes</h1>
     </header>
 
@@ -24,7 +24,7 @@
                 <div class="flex items-center justify-between mb-3 px-1">
                     <h2 class="text-lg font-medium text-gray-900 capitalize tracking-tight">{theme}</h2>
                     <a 
-                        href="/examples/{theme}" 
+                        href={resolve('/examples/[theme]', { theme })}
                         class="text-gray-400 hover:text-gray-900 transition-colors p-1"
                         target="_top"
                         title="Open {theme} in full screen"
@@ -36,7 +36,7 @@
                 
                 <div class="flex-1 w-full relative border border-gray-100 rounded-lg overflow-hidden bg-gray-50">
                     <iframe 
-                        src="/examples/{theme}" 
+                        src={resolve('/examples/[theme]', { theme })}
                         class="w-full h-full border-none"
                         title="{theme} theme preview"
                         loading="lazy"

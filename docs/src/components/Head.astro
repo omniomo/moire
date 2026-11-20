@@ -3,22 +3,24 @@ import StarlightHead from '@astrojs/starlight/components/Head.astro';
 import { ClientRouter } from 'astro:transitions';
 
 const props = Astro.props;
+const docsBase = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <StarlightHead {...props} />
 <ClientRouter />
 
-<script is:inline>
+<script define:vars={{ docsBase }}>
   (function() {
-    // Only redirect on root (zh) pages, not already on /en/
-    if (window.location.pathname.startsWith('/en')) return;
+    const { pathname, search, hash } = window.location;
+    const pagePath = pathname.slice(docsBase.length) || '/';
+    if (pagePath === '/en' || pagePath.startsWith('/en/')) return;
     // Only redirect once per session
     if (sessionStorage.getItem('lang-redirected')) return;
     var lang = navigator.language || navigator.userLanguage || '';
     var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (!lang.startsWith('zh') && tz !== 'Asia/Shanghai' && tz !== 'Asia/Beijing') {
       sessionStorage.setItem('lang-redirected', '1');
-      window.location.replace('/en' + window.location.pathname);
+      window.location.replace(docsBase + '/en' + pagePath + search + hash);
     }
   })();
 </script>

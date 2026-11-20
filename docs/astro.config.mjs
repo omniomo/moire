@@ -23,7 +23,8 @@ shortcutsConfig.shortcuts.forEach((/** @type {{ id: string; url: string; }} */ s
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://moire-docs.ooooomo.com',
+  site: 'https://moire.ooooomo.com',
+  base: '/docs',
   vite: {
     plugins: [tailwindcss()],
   },

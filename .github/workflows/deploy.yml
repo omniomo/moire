@@ -30,15 +30,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10.18.3
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "pnpm"
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            docs/pnpm-lock.yaml
+            themes/pnpm-lock.yaml
 
       - name: Inject Memos from memos branch
         # The repository ID survives ownership transfers and excludes user forks.
@@ -51,7 +55,20 @@ jobs:
         run: pnpm install
 
       - name: Build
+        env:
+          VITE_MOIRE_NAV: ${{ github.event.repository.id == 1147685883 }}
         run: pnpm run build
+
+      - name: Include the official docs and theme gallery
+        if: github.event.repository.id == 1147685883
+        run: |
+          pnpm --dir docs install --frozen-lockfile
+          pnpm --dir docs run build
+          pnpm --dir themes install --frozen-lockfile
+          pnpm --dir themes run build
+          cp -R docs/dist build/docs
+          cp -R themes/build build/themes
+          printf '\nSitemap: https://moire.ooooomo.com/docs/sitemap-index.xml\nSitemap: https://moire.ooooomo.com/themes/sitemap.xml\n' >> build/robots.txt
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

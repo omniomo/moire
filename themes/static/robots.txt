@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://moire-themes.ooooomo.com/sitemap.xml
+Sitemap: https://moire.ooooomo.com/themes/sitemap.xml

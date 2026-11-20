@@ -53,6 +53,13 @@
     {@html `<script type="application/ld+json">${JSON.stringify(schema)}</script>`}
 </svelte:head>
 
+{#if import.meta.env.VITE_MOIRE_NAV === 'true'}
+    <nav aria-label="Moire" class="mx-auto flex max-w-2xl justify-end gap-5 px-5 pt-5 text-sm text-gray-600 md:px-12">
+        <a class="hover:underline" href="/docs/" rel="external">Docs</a>
+        <a class="hover:underline" href="/themes/" rel="external">Themes</a>
+    </nav>
+{/if}
+
 {#if ThemeComponent}
     <ThemeComponent {data} {config} />
 {:else}

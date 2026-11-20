@@ -8,7 +8,7 @@
     Sync your thoughts from Apple Notes to GitHub Pages by Shortcuts.
   </p>
   <p>
-    <a href="https://moire.ooooomo.com">Moire</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://moire-docs.ooooomo.com">Docs</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://moire-themes.ooooomo.com">Themes</a>
+    <a href="https://moire.ooooomo.com">Moire</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://moire.ooooomo.com/docs/">Docs</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://moire.ooooomo.com/themes/">Themes</a>
   </p>
   <br/>
   <img src="images/moire.png" width="100%" alt="Moire Preview">
