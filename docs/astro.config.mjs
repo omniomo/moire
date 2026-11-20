@@ -23,6 +23,7 @@ shortcutsConfig.shortcuts.forEach((/** @type {{ id: string; url: string; }} */ s
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://moire-docs.ooooomo.com',
   vite: {
     plugins: [tailwindcss()],
   },
@@ -48,7 +49,7 @@ export default defineConfig({
           },
           {
             label: { root: '预览', 'zh-CN': '预览', en: 'Preview' },
-            link: 'https://moire.blog/',
+            link: 'https://moire.ooooomo.com/',
             badge: 'demo',
             }],
           footerText:
@@ -56,7 +57,7 @@ export default defineConfig({
         })
       ],
       social: [
-        { icon: 'github', label: 'GitHub', href: 'https://github.com/moirelog/moire' },
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/omniomo/moire' },
       ],
       defaultLocale: 'root',
       locales: {

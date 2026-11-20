@@ -24,9 +24,9 @@ import { Steps, LinkButton } from '@astrojs/starlight/components';
 - 自己的域名（**需要**，因为 `workers.dev` 域名也无法访问了）
 - 域名已托管到 Cloudflare
 
-我们提供了一键部署按钮（基于独立仓库 [github-api-proxy](https://github.com/moirelog/github-api-proxy)）：
+我们提供了一键部署按钮（基于独立仓库 [moire-api-proxy](https://github.com/omniomo/moire-api-proxy)）：
 
-<LinkButton target="_blank" href="https://deploy.workers.cloudflare.com/?url=https://github.com/moirelog/github-api-proxy" variant="secondary" icon="rocket">
+<LinkButton target="_blank" href="https://deploy.workers.cloudflare.com/?url=https://github.com/omniomo/moire-api-proxy" variant="secondary" icon="rocket">
   一键部署到 Cloudflare Workers
 </LinkButton>
 
@@ -41,8 +41,8 @@ import { Steps, LinkButton } from '@astrojs/starlight/components';
 1. 确保安装了 Node.js
 2. 克隆仓库并部署：
    ```bash
-   git clone https://github.com/moirelog/github-api-proxy.git
-   cd github-api-proxy
+   git clone https://github.com/omniomo/moire-api-proxy.git
+   cd moire-api-proxy
    npm install
    npx wrangler deploy
    ```
