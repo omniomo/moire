@@ -34,7 +34,8 @@ export default defineConfig({
     starlight({
       title: 'MOIRE LOG',
       logo: {
-        src: './src/assets/moire.svg',
+        light: './src/assets/moire.svg',
+        dark: './src/assets/moire-dark.svg',
         replacesTitle: false,
       },
       plugins: [
