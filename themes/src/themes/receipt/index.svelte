@@ -5,6 +5,7 @@
   import type {PageData} from '../../routes/$types';
   import {createMemoList} from '$lib/memo.svelte';
   import Background from './Background.svelte';
+  import Author from '$lib/components/Author.svelte';
   import Heatmap from '$lib/components/Heatmap.svelte';
 
   let {data, config}: {data: PageData; config: any} = $props();
@@ -128,7 +129,7 @@
 
       <div class="my-5 text-[#999]">- - - - - - - - - - - - - - -</div>
 
-      <p class="mt-8 mb-1">© {new Date().getFullYear()} {config.author.toUpperCase()}</p>
+      <p class="mt-8 mb-1">© {new Date().getFullYear()} <Author name={config.author.toUpperCase()} url={config.authorUrl} class="underline decoration-dotted hover:bg-black hover:text-white transition-colors" /></p>
       <p class="mb-4">synced from Apple Notes and powered by <a href="https://moire.ooooomo.com/" target="_blank" class="underline decoration-dotted hover:bg-black hover:text-white transition-colors">MOIRE</a></p>
     </footer>
   </div>

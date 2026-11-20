@@ -20,8 +20,8 @@
         let loader: () => Promise<any>;
         if (theme === 'receipt') {
             loader = () => import('$themes/receipt/index.svelte');
-        } else if (theme === 'cyberpunk') {
-            loader = () => import('$themes/cyberpunk/index.svelte');
+        } else if (theme === 'noir' || theme === 'cyberpunk') {
+            loader = () => import('$themes/noir/index.svelte');
         } else if (theme === 'academic') {
             loader = () => import('$themes/academic/index.svelte');
         } else if (theme === 'bento') {

@@ -7,7 +7,7 @@
         'receipt',
         'pixel',
         'academic',
-        'cyberpunk',
+        'noir',
     ];
 </script>
 
@@ -47,6 +47,6 @@
     </div>
     
     <footer class="mt-20 text-center text-gray-400 text-sm ">
-         &copy; {new Date().getFullYear()} Moire
+         &copy; {new Date().getFullYear()} Moire · Made by <a href="http://ooooomo.com/" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">OMO</a>
     </footer>
 </div>

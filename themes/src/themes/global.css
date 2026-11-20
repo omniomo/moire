@@ -6,6 +6,103 @@
   font-display: swap;
 }
 
+/* Latin Modern (Computer Modern) web subsets for the Academic theme, see lib/assets/fonts/README.md */
+@font-face {
+  font-family: 'Moire LM Roman';
+  src: url('../lib/assets/fonts/lmroman10-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Moire LM Roman';
+  src: url('../lib/assets/fonts/lmroman10-italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Moire LM Roman';
+  src: url('../lib/assets/fonts/lmroman10-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Moire LM Roman';
+  src: url('../lib/assets/fonts/lmroman10-bolditalic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Moire LM Mono';
+  src: url('../lib/assets/fonts/lmmono10-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ *
+ * Font stacks
+ * Latin face first, then a CJK face of the same genre, so mixed
+ * Chinese/English text never falls back to a mismatched font.
+ * ------------------------------------------------------------------ */
+:root {
+  --moire-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Helvetica Neue", Arial, sans-serif;
+  --moire-serif: "Iowan Old Style", "Charter", "Palatino Linotype", Palatino, Georgia, "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", "SimSun", serif;
+  --moire-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, "Roboto Mono", "Noto Sans Mono", "DejaVu Sans Mono", "Liberation Mono", monospace;
+  /* Chinese academic convention: 宋体 body, 黑体 headings & bold, 楷体 quotations */
+  --moire-latex: "Moire LM Roman", "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  --moire-latex-hei: "Moire LM Roman", "PingFang SC", "Heiti SC", "Microsoft YaHei", "SimHei", "Noto Sans CJK SC", sans-serif;
+  --moire-latex-kai: "Moire LM Roman", "Kaiti SC", "STKaiti", "KaiTi", "AR PL UKai CN", "Songti SC", "Noto Serif CJK SC", serif;
+  --moire-latex-mono: "Moire LM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* ------------------------------------------------------------------ *
+ * Theme tokens
+ * --text-color / --accent-color are shared with the heatmap & checkboxes.
+ * ------------------------------------------------------------------ */
+body.classic {
+  --bg-color: #ffffff;
+  --text-color: #1d1d1f;
+  --muted: #6e6e73;
+  --faint: #a1a1a6;
+  --rule: #ebebed;
+  /* one Notes yellow: links, checkboxes and every heatmap level derive from it */
+  --accent-color: #f0b000;
+  --link-line: var(--accent-color);
+  --code-bg: #f4f4f5;
+  --font-family: var(--moire-sans);
+  --heat-0: #f1f1f3;
+  --heat-1: color-mix(in srgb, var(--accent-color) 30%, #ffffff);
+  --heat-2: color-mix(in srgb, var(--accent-color) 55%, #ffffff);
+  --heat-3: color-mix(in srgb, var(--accent-color) 80%, #ffffff);
+  --heat-4: var(--accent-color);
+  --check-radius: 999px;
+}
+
+body.bento {
+  --bg-color: #f5f5f7;
+  --surface: #ffffff;
+  --text-color: #1d1d1f;
+  --muted: #6e6e73;
+  --faint: #86868b;
+  --rule: #e8e8ed;
+  --accent-color: #0071e3;
+  --link: #0066cc;
+  --code-bg: #f5f5f7;
+  --font-family: var(--moire-sans);
+  --heat-0: rgba(0, 0, 0, 0.055);
+  --heat-1: #cfe2fa;
+  --heat-2: #93c0f4;
+  --heat-3: #4b95ea;
+  --heat-4: #0071e3;
+  --heat-radius: 3px;
+  --check-radius: 5px;
+}
+
+/* Receipt keeps its original look */
 body.receipt {
   --bg-color: transparent;
   --text-color: #000000;
@@ -13,26 +110,7 @@ body.receipt {
   --font-family: 'zpix', monospace;
 }
 
-body.cyberpunk {
-  --bg-color: #000000;
-  --text-color: #eab662;
-  --accent-color: #9bebc6;
-}
-
-body.academic {
-  --bg-color: rgb(255, 252, 243);
-  --text-color: #464646;
-  --accent-color: #d33682;
-  --font-family: "Songti SC", "STSong", "SimSun", "PMingLiU", serif;
-}
-
-body.bento {
-  --bg-color: #f5f5f7;
-  --text-color: #1d1d1f;
-  --accent-color: rgb(88, 113, 206);
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
+/* Pixel keeps its original look */
 body.pixel {
   --bg-color: #e5ebc4;
   --text-color: #6c584c;
@@ -43,171 +121,297 @@ body.pixel {
   -webkit-font-smoothing: antialiased;
 }
 
-body.classic {
-  --bg-color: #ffffff;
-  --text-color: #1d1d1f;
-  --accent-color: #FCB828;
+body.academic {
+  --bg-color: #ecebe7;
+  --surface: #ffffff;
+  --text-color: #161616;
+  --muted: #505050;
+  --faint: #8a8a8a;
+  --rule: #161616;
+  --accent-color: #161616;
+  --link: #1d4e8f;
+  --code-bg: transparent;
+  --font-family: var(--moire-latex);
+  --heat-0: #efefec;
+  --heat-1: #cfcfca;
+  --heat-2: #9d9d97;
+  --heat-3: #63635e;
+  --heat-4: #1e1e1c;
+  --heat-radius: 0;
+  --heat-gap: 2px;
+  --tip-bg: #161616;
+  --tip-fg: #ffffff;
+  --tip-font: var(--moire-latex);
+  --tip-radius: 0;
+  --check-radius: 1px;
 }
 
+/* `cyberpunk` was retired in favour of noir; old configs keep working */
+body.noir,
+body.cyberpunk {
+  --bg-color: #000000;
+  --surface: #0c0c0d;
+  --text-color: #ededed;
+  --muted: #8f8f94;
+  --faint: #5c5c61;
+  --rule: #1f1f22;
+  --accent-color: #ffffff;
+  --link: #ffffff;
+  --code-bg: #141416;
+  --font-family: var(--moire-sans);
+  --heat-0: #141416;
+  --heat-1: #3a3a3e;
+  --heat-2: #6e6e73;
+  --heat-3: #b0b0b5;
+  --heat-4: #ffffff;
+  --heat-radius: 2px;
+  --tip-bg: #ffffff;
+  --tip-fg: #000000;
+  --check-fg: #000000;
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
 body {
   margin: 0;
   padding: 0;
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: var(--font-family);
+  font-family: var(--font-family, var(--moire-sans));
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  /* Never fake an oblique for Chinese: CJK stays upright, Latin keeps real italics. */
+  font-synthesis-style: none;
+  /* Hair space between Chinese and Latin/numbers (Chrome 140+, Safari 18.4+). */
+  text-autospace: normal;
 }
 
-p,
-li,
-blockquote,
-dd,
-dt,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+::selection {
+  background: color-mix(in srgb, var(--accent-color) 28%, transparent);
+}
+
+p, li, blockquote, dd, dt, h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word;
 }
 
 a {
   overflow-wrap: anywhere;
-  word-break: break-all;
 }
 
-ul {
-  list-style-type: disc;
-  padding-left: 1rem;
-  margin-bottom: 0.5rem;
+time, .tabular {
+  font-variant-numeric: tabular-nums;
 }
 
-ul ul, ol ul {
-  padding-left: 1.25rem;
-}
-ol {
-  list-style-type: decimal;
-  padding-left: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-ol ol, ul ol {
-  padding-left: 1.5rem;
-}
-:is(ul, ol) :is(ul, ol) {
-  margin-bottom: 0;
+/* ------------------------------------------------------------------ *
+ * Memo prose — shared rhythm for rendered Apple Notes content.
+ * Themes override the variables, not the structure.
+ * ------------------------------------------------------------------ */
+.memo {
+  font-size: var(--memo-size, 1rem);
+  line-height: var(--memo-leading, 1.75);
+  color: var(--memo-ink, inherit);
+  overflow-wrap: break-word;
 }
 
-ul:has(li input[type="checkbox"]) {
-  padding-left: 0;
+.memo > * { margin-block: 0; }
+.memo > * + * { margin-top: var(--memo-gap, 0.85em); }
+.memo > * + :is(h1, h2, h3, h4, h5, h6) { margin-top: var(--memo-head-gap, 1.5em); }
+.memo > :is(h1, h2, h3, h4, h5, h6) + * { margin-top: 0.45em; }
+
+.memo :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: var(--h-weight, 600);
+  line-height: 1.4;
+  letter-spacing: var(--h-tracking, normal);
+  color: var(--h-ink, inherit);
+}
+.memo h1 { font-size: var(--h1, 1.25em); }
+.memo h2 { font-size: var(--h2, 1.0625em); }
+.memo :is(h3, h4, h5, h6) { font-size: var(--h3, 1em); }
+
+.memo a {
+  color: var(--link, inherit);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--link-thickness, 1px);
+  text-underline-offset: 0.24em;
+  text-decoration-color: var(--link-line, color-mix(in srgb, currentColor 35%, transparent));
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+.memo a:hover { text-decoration-color: currentColor; }
+
+.memo strong, .memo b { font-weight: var(--strong-weight, 600); color: var(--strong-ink, inherit); }
+.memo del { color: var(--muted); }
+
+.memo ul, .memo ol { padding-left: 1.35em; }
+.memo ul { list-style-type: var(--ul-marker, disc); }
+.memo ol { list-style-type: var(--ol-marker, decimal); }
+.memo li + li, .memo li > :is(ul, ol) { margin-top: 0.3em; }
+.memo li::marker { color: var(--marker, var(--faint, currentColor)); }
+.memo li > p { margin: 0; }
+
+.memo ul:has(> li > input[type="checkbox"]) { padding-left: 0; }
+.memo li:has(> input[type="checkbox"]) { list-style: none; }
+.memo li:has(> input[type="checkbox"]) > :is(ul, ol) { padding-left: 1.6em; }
+
+.memo blockquote {
+  padding-left: 1em;
+  border-left: var(--quote-border, 2px solid var(--rule));
+  color: var(--quote-ink, var(--muted));
+}
+.memo blockquote > * + * { margin-top: 0.5em; }
+
+.memo code {
+  font-family: var(--code-font, var(--moire-mono));
+  font-size: 0.875em;
+  padding: 0.12em 0.36em;
+  border-radius: var(--code-radius, 4px);
+  background: var(--code-bg);
+}
+.memo pre {
+  font-family: var(--code-font, var(--moire-mono));
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--pre-radius, 8px);
+  background: var(--code-bg);
+  overflow-x: auto;
+  -webkit-font-smoothing: auto;
+}
+.memo pre code { padding: 0; background: none; font-size: inherit; border-radius: 0; }
+
+.memo img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--img-radius, 6px);
 }
 
-ul:has(li input[type="checkbox"]) ul {
-  padding-left: 1rem;
+.memo table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875em;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
 }
-
-li:has(input[type="checkbox"]) {
-  list-style-type: none;
-  padding-left: 0.25em;
+.memo th, .memo td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.55em 0.9em 0.55em 0;
+  border-bottom: 1px solid var(--rule);
 }
+.memo th { font-weight: 600; color: var(--h-ink, inherit); }
+.memo th > strong { font-weight: inherit; }
 
+.memo hr { border: 0; border-top: 1px solid var(--rule); }
+
+.memo .tag-link {
+  font: inherit;
+  font-size: var(--tag-size, 0.875em);
+  color: var(--tag-ink, var(--muted));
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.memo .tag-link:hover,
+.memo .tag-link.active { color: var(--tag-hover, var(--text-color)); }
+
+/* ------------------------------------------------------------------ *
+ * Checkboxes (Apple Notes task lists)
+ * ------------------------------------------------------------------ */
 input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 1.1em;
-  height: 1.1em;
-  border: 1px solid var(--text-color);
-  border-radius: 2px;
+  width: 1em;
+  height: 1em;
+  border: 1.5px solid color-mix(in srgb, var(--text-color) 40%, transparent);
+  border-radius: var(--check-radius, 4px);
   display: inline-grid;
   place-content: center;
-  margin-right: 0.5em;
-  transform: translateY(-0.075em);
-  background-color: transparent;
-  cursor: pointer;
+  margin: 0 0.55em 0 0;
+  transform: translateY(-0.1em);
   vertical-align: middle;
+  background: transparent;
 }
 
 input[type="checkbox"]::before {
   content: "";
-  width: 0.65em;
-  height: 0.65em;
+  width: 0.6em;
+  height: 0.6em;
   transform: scale(0);
   transition: 120ms transform ease-in-out;
-  box-shadow: inset 1em 1em var(--text-color);
-  transform-origin: center;
+  box-shadow: inset 1em 1em var(--check-fg, #ffffff);
   clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
-input[type="checkbox"]:checked::before {
-  transform: scale(1);
+input[type="checkbox"]:checked {
+  background: var(--check-bg, var(--accent-color));
+  border-color: var(--check-bg, var(--accent-color));
 }
+input[type="checkbox"]:checked::before { transform: scale(1); }
+li:has(> input[type="checkbox"]:checked) { color: var(--muted); }
 
+/* original pixel checkboxes: thick square frame, olive tick */
 body.pixel input[type="checkbox"] {
-  border-width: 2px;
+  width: 1.1em;
+  height: 1.1em;
+  border: 2px solid var(--border-color);
   border-radius: 0;
-  border-color: var(--border-color);
+  margin-right: 0.5em;
+  transform: translateY(-0.075em);
 }
+body.pixel input[type="checkbox"]::before { box-shadow: inset 1em 1em var(--text-color); }
+body.pixel input[type="checkbox"]:checked { background: transparent; border-color: var(--border-color); }
+body.pixel input[type="checkbox"]:checked::before { box-shadow: inset 1em 1em var(--accent-color); }
+body.pixel li:has(> input[type="checkbox"]:checked) { color: inherit; }
 
-body.pixel input[type="checkbox"]:checked::before {
-  box-shadow: inset 1em 1em var(--accent-color);
-}
-
-body.bento input[type="checkbox"] {
-  border-radius: 4px;
-  border-color: #d1d5db;
-  background-color: white;
-}
-
-body.bento input[type="checkbox"]:checked {
-  background-color: rgb(158, 190, 255);
-  border-color: rgb(139, 104, 208);
-}
-
-body.bento input[type="checkbox"]:checked::before {
-  box-shadow: inset 1em 1em #ffffff;
-}
-
-body.cyberpunk input[type="checkbox"] {
-  border-color: var(--accent-color);
-  border-radius: 0;
-  box-shadow: 2px 2px 0 var(--text-color);
-}
-
-body.cyberpunk input[type="checkbox"]:checked {
-  background-color: var(--accent-color);
-}
-
-body.cyberpunk input[type="checkbox"]:checked::before {
-  box-shadow: inset 1em 1em var(--bg-color);
-}
-
-body.academic input[type="checkbox"] {
-  border-radius: 1px;
-}
-
+/* original receipt checkboxes: square outline, inked tick */
 body.receipt input[type="checkbox"] {
-  border-width: 1.5px;
+  width: 1.1em;
+  height: 1.1em;
+  border: 1.5px solid var(--text-color);
   border-radius: 0;
+  margin-right: 0.5em;
+  transform: translateY(-0.075em);
 }
+body.receipt input[type="checkbox"]::before { box-shadow: inset 1em 1em var(--text-color); }
+body.receipt input[type="checkbox"]:checked { background: transparent; border-color: var(--text-color); }
+body.receipt li:has(> input[type="checkbox"]:checked) { color: inherit; }
 
+/* the original receipt and pixel themes rely on the old global list styles */
+body:is(.receipt, .pixel) ul { list-style-type: disc; padding-left: 1rem; margin-bottom: 0.5rem; }
+body:is(.receipt, .pixel) ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+body:is(.receipt, .pixel) :is(ul, ol) :is(ul, ol) { margin-bottom: 0; }
+body:is(.receipt, .pixel) :is(ul, ol) ul { padding-left: 1.25rem; }
+body:is(.receipt, .pixel) :is(ul, ol) ol { padding-left: 1.5rem; }
+body:is(.receipt, .pixel) ul:has(li input[type="checkbox"]) { padding-left: 0; }
+body:is(.receipt, .pixel) ul:has(li input[type="checkbox"]) ul { padding-left: 1rem; }
+body:is(.receipt, .pixel) li:has(input[type="checkbox"]) { list-style-type: none; padding-left: 0.25em; }
+
+/* ------------------------------------------------------------------ *
+ * Print
+ * ------------------------------------------------------------------ */
 @page {
   margin: 20mm;
 }
 
 @media print {
-
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
   .fixed,
-  [class*="fixed inset-0"] {
+  [class*="fixed inset-0"],
+  .no-print {
     display: none !important;
   }
 
-  button {
+  button:not(.tag-link) {
     display: none !important;
   }
 
@@ -231,31 +435,10 @@ body.receipt input[type="checkbox"] {
     min-height: auto !important;
   }
 
-  [class*="shadow"],
-  [class*="drop-shadow"],
-  [class*="backdrop-blur"] {
-    box-shadow: none !important;
-    filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  [class*="hover:"] {
-    transform: none !important;
-  }
-
   article,
-  section,
-  .group {
+  section {
     break-inside: avoid;
     page-break-inside: avoid;
-  }
-
-  [class*="line-clamp"] {
-    -webkit-line-clamp: unset !important;
-    line-clamp: unset !important;
-    overflow: visible !important;
-    display: block !important;
   }
 
   *,

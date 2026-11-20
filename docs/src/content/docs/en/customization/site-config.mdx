@@ -24,7 +24,10 @@ export default {
   title: "My Moire Blog",
   
   // Author Name
-  author: "Aeris",
+  author: "OMO",
+
+  // Author homepage (optional): the author name in the footer links here
+  authorUrl: "http://ooooomo.com/",
   
   // Website Description
   description: "My personal blog powered by Moire",
@@ -65,6 +68,12 @@ The author's name, used for:
 - RSS feeds
 - SEO meta tags
 
+### authorUrl
+
+**Type**: `string` (optional)
+
+The author's homepage. When set, the author name in the footer becomes a link to it.
+
 ### description
 
 **Type**: `string`  
@@ -99,7 +108,7 @@ Sort order for posts:
 ### theme
 
 **Type**: `string`  
-**Options**: `"classic"` | `"receipt"` | `"cyberpunk"` | `"academic"` | `"pixel"` | `"bento"`
+**Options**: `"classic"` | `"receipt"` | `"noir"` | `"academic"` | `"pixel"` | `"bento"`
 
 The theme style. See the [Themes](/docs/en/customization/themes/) chapter for details.
 
@@ -111,7 +120,7 @@ A complete configuration example:
 ```typescript
 export default {
   title: "Moire's Notebook",
-  author: "Aeris",
+  author: "OMO",
   description: "Notes on technology, life, and thoughts",
   pageSize: 8,
   theme: "academic",

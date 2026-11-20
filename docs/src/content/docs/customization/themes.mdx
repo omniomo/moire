@@ -29,26 +29,26 @@ theme: "receipt"
 
 ---
 
-### Cyberpunk（赛博朋克）
+### Noir（纯黑）
 
 **特点**：
-- 💻 黑客终端风格
-- ⚡ 动态扫描线效果
+- ⬛️ 纯黑背景，单栏，没有多余装饰
+- 🌙 适合夜间阅读
 
 **预览**：
 ```typescript
-theme: "cyberpunk"
+theme: "noir"
 ```
 
-![](./cyberpunk.png)
+> 旧的 `cyberpunk` 主题已移除，配置里仍写 `"cyberpunk"` 的站点会自动使用 Noir。
 
 ---
 
-### Academic（学术风）
+### Academic（论文风）
 
 **特点**：
-- 🎓 衬线字体
-- 📄 正式的笔记本样式
+- 🎓 LaTeX 论文排版：Computer Modern 字体、标题/作者/日期、摘要与关键词
+- 📄 章节编号、三线表、图注、脚注；中文正文宋体、标题黑体、引文楷体
 
 **预览**：
 ```typescript
@@ -74,8 +74,8 @@ theme: "pixel"
 
 ### Bento（现代风）
 
-- 圆角卡片
-- 流动背景
+- 缓慢流动的柔和彩色背景，磨砂白卡片
+- 顶部概览格：活跃度、笔记数、写作天数、标签数
 
 **预览**：
 ```typescript
@@ -92,7 +92,7 @@ theme: "bento"
 ```typescript
 export default {
   title: "My Blog",
-  theme: "cyberpunk", // 改成你想要的主题
+  theme: "noir", // 改成你想要的主题
   // ... 其他配置
 }
 ```
