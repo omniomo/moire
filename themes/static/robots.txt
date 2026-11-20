@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://moire-themes.ooooomo.com/sitemap.xml
