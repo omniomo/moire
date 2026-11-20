@@ -177,10 +177,6 @@
     font-style: italic;
   }
 
-  .keywords .sep {
-    white-space: pre;
-  }
-
   /* ---- figure 1 ---- */
   .figure {
     margin: 2.5rem 0 0;
