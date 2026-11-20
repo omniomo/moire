@@ -1,34 +1,11 @@
 <script lang="ts">
     import type { PageData } from './$types';
     import { config } from '../../moire.config';
+    // The theme chosen in moire.config.ts (vite.config.ts → $moire-theme). Imported statically so the
+    // prerendered page already holds every post: readers and search engines see them before any script runs.
+    import Theme from '$moire-theme';
     
     let { data }: { data: PageData } = $props();
-    let ThemeComponent = $state<any>(null);
-
-    // __MOIRE_THEME__ is replaced at build time by Vite define (from moire.config.ts)
-    // Only the matching branch survives dead-code elimination
-    let loader: () => Promise<any>;
-    if (__MOIRE_THEME__ === 'receipt') {
-        loader = () => import('$themes/receipt/index.svelte');
-    } else if (__MOIRE_THEME__ === 'noir' || __MOIRE_THEME__ === 'cyberpunk') {
-        // `cyberpunk` was retired; existing configs get noir
-        loader = () => import('$themes/noir/index.svelte');
-    } else if (__MOIRE_THEME__ === 'academic') {
-        loader = () => import('$themes/academic/index.svelte');
-    } else if (__MOIRE_THEME__ === 'bento') {
-        loader = () => import('$themes/bento/index.svelte');
-    } else if (__MOIRE_THEME__ === 'pixel') {
-        loader = () => import('$themes/pixel/index.svelte');
-    } else if (__MOIRE_THEME__ === 'classic') {
-        loader = () => import('$themes/classic/index.svelte');
-    } else {
-        loader = () => import('$themes/receipt/index.svelte');
-    }
-    
-    loader().then(module => {
-        ThemeComponent = module.default;
-    });
-
     const schema = $derived({
         "@context": "https://schema.org",
         "@type": "Blog",
@@ -61,10 +38,5 @@
     </nav>
 {/if}
 
-{#if ThemeComponent}
-    <ThemeComponent {data} {config} />
-{:else}
-    <!-- Keep the page blank (theme background only) until the theme chunk arrives -->
-    <div class="min-h-screen"></div>
-{/if}
+<Theme {data} {config} />
 

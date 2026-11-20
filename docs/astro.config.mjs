@@ -32,7 +32,7 @@ export default defineConfig({
   integrations: [
 
     starlight({
-      title: 'MOIRE LOG',
+      title: 'Moire',
       logo: {
         light: './src/assets/moire.svg',
         dark: './src/assets/moire-dark.svg',
