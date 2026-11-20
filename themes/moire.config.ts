@@ -1,6 +1,7 @@
 export const config = {
   title: "Moire",
-  author: "Aeris",
+  author: "OMO",
+  authorUrl: "http://ooooomo.com/",
   theme: "classic",
   heatmap: true,
   pageSize: 20,

@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { slide } from 'svelte/transition';
-  import {format} from 'date-fns';
-  import type {PageData} from '../../routes/$types';
-  import {createMemoList} from '$lib/memo.svelte';
-  import Background from './Background.svelte';
+  import { format } from 'date-fns';
+  import type { PageData } from '../../routes/$types';
+  import { createMemoList } from '$lib/memo.svelte';
+  import { tagLinks } from '$lib/tags';
+  import Author from '$lib/components/Author.svelte';
   import Heatmap from '$lib/components/Heatmap.svelte';
 
-  let {data, config}: {data: PageData; config: any} = $props();
+  let { data, config }: { data: PageData; config: any } = $props();
   const memoList = createMemoList(() => data, config);
+
+  const dated = $derived(data.memos.length ? format(data.memos[0].date, 'MMMM d, yyyy') : '');
 
   $effect(() => {
     if (memoList.selectedTag) {
@@ -16,152 +18,436 @@
   });
 </script>
 
-<div class="max-w-4xl mx-auto min-h-screen text-[var(--text-color)] p-5 md:p-10 {config.theme} relative isolate">
-  <Background />
-
-  <div class="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-12">
-    <aside class="md:col-span-3 md:border-r border-[var(--text-color)]/10 md:pr-8 md:text-right">
-      <header class="sticky top-10  md:h-[calc(100vh-2rem)]">
-        <h1 class="text-4xl font-black italic mb-4 text-[var(--accent-color)] tracking-tight">{config.title}</h1>
-        <div class="text-sm text-[var(--text-color)]/60 italic mb-8">
-          <p>{config.description}</p>
-          <p class="mt-4">— {config.author}</p>
-        </div>
-
-        {#if memoList.selectedTag}
-          <div class="mb-8">
-            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-color)]/40 mb-2">
-              Filtered View
-            </p>
-            <button
-              class="bg-[var(--accent-color)]/10 text-[var(--accent-color)] px-3 py-1 rounded-full text-sm italic hover:bg-[var(--accent-color)]/20 transition-colors"
-              onclick={() => memoList.selectTag(null)}
-            >
-              #{memoList.selectedTag} ✕
-            </button>
-          </div>
-        {/if}
-
-        <div class="hidden md:block">
-          <p
-            class="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-color)]/40 mb-4 pb-2 border-b border-[var(--text-color)]/5 inline-block ml-auto"
-          >
-            Index
-          </p>
-          <ul class="text-sm space-y-3">
-            {#each memoList.allTags as tag}
-              <li class="list-none">
-                <button
-                  class="hover:text-[var(--accent-color)] hover:underline decoration-[var(--accent-color)]/30 underline-offset-4 transition-colors {memoList.selectedTag ===
-                  tag
-                    ? 'text-[var(--accent-color)] font-bold'
-                    : 'text-[var(--text-color)]/60'}"
-                  onclick={() => memoList.selectTag(tag)}
-                >
-                  #{tag}
-                </button>
-              </li>
-            {/each}
-          </ul>
-        </div>
-
-                  <p class="hidden md:block absolute bottom-6 text-xs opacity-60">
-          © {new Date().getFullYear()} {config.author}, powered by <a href="https://moire.ooooomo.com/" target="_blank" class="inline hover:underline">MOIRE</a>
-        </p>
-      </header>
-      
-    </aside>
-
-    <main class="md:col-span-9 space-y-16 max-w-2xl w-full">
-      {#if config.heatmap}
-        <section class="border-b border-[var(--text-color)]/20 pb-8">
-          <Heatmap memos={data.memos} />
-        </section>
+<div class="desk min-h-screen">
+  <article class="paper" style="counter-reset: figure {config.heatmap ? 1 : 0};">
+    <!-- \maketitle -->
+    <header class="front">
+      <h1>{config.title}</h1>
+      <p class="author">{config.author}<a class="mark" href="#colophon" aria-label="Note">*</a></p>
+      {#if dated}
+        <p class="date">{dated}</p>
       {/if}
+    </header>
 
-      {#each Object.entries(memoList.groupedMemos) as [dateKey, memos] (dateKey)}
-        <section in:slide>
-          <div class="flex items-baseline gap-4 mb-10 border-b border-[var(--text-color)] pb-3">
-            <h2 class="text-3xl font-black italic text-[var(--text-color)] tracking-tight">
-              {format(new Date(dateKey + 'T00:00:00'), 'MMMM dd, yyyy')}
-            </h2>
-            <span class="text-sm text-[var(--text-color)]/40 italic font-medium"
-              >{format(new Date(dateKey + 'T00:00:00'), 'EEEE')}</span
-            >
-          </div>
+    {#if config.description || memoList.allTags.length}
+      <section class="abstract">
+        {#if config.description}
+          <h2>Abstract</h2>
+          <p>{config.description}</p>
+        {/if}
+        {#if memoList.allTags.length}
+          <p class="keywords">
+            <b>Keywords:</b>
+            {#each memoList.allTags as tag, i}{#if i > 0}<span class="sep">{', '}</span>{/if}<button class:current={memoList.selectedTag === tag} onclick={() => memoList.selectTag(tag)}>{tag}</button>{/each}
+          </p>
+        {/if}
+      </section>
+    {/if}
 
-          <div class="space-y-14">
-            {#each memos as memo (memo.slug)}
-              <article
-                in:slide
-                class="group relative"
-                id={memo.slug}
-              >
-                <div
-                  class="absolute -left-20 top-2 hidden xl:block text-xs font-bold tracking-widest text-[var(--text-color)]/30 w-12 text-right uppercase"
-                >
-                  {format(memo.date, 'HH:mm')}
-                </div>
+    {#if config.heatmap}
+      <figure class="figure">
+        <Heatmap memos={data.memos} />
+        <figcaption><span>Figure 1:</span> Notes written per day over the past year ({data.memos.length} in total).</figcaption>
+      </figure>
+    {/if}
 
-                <div class="xl:hidden text-sm font-bold tracking-widest text-[var(--text-color)]/30 mb-3 uppercase">
-                  {format(memo.date, 'HH:mm')}
-                </div>
+    {#if memoList.selectedTag}
+      <p class="filter">
+        Showing entries with keyword <i>{memoList.selectedTag}</i> ({memoList.filteredMemos.length}).
+        <button onclick={() => memoList.selectTag(null)}>Show all</button>
+      </p>
+    {/if}
 
-                <div
-                  class="max-w-none text-[var(--text-color)]/90
-                        [&_h1]:text-[1.35rem] [&_h1]:font-bold [&_h1]:mb-5 [&_h1]:mt-7 [&_h1]:text-[var(--text-color)]
-                        [&_h2]:text-[1.25rem] [&_h2]:font-bold [&_h2]:mb-4 [&_h2]:mt-6 [&_h2]:text-[var(--text-color)]
-                        [&_h3]:text-[1.1rem] [&_h3]:font-bold [&_h3]:mb-3 [&_h3]:mt-5 [&_h3]:text-[var(--text-color)]
-                        [&_h4]:text-[1rem] [&_h4]:font-bold [&_h4]:mb-3 [&_h4]:mt-4 [&_h4]:text-[var(--text-color)]/80
-                        [&_h5]:text-[0.9rem] [&_h5]:font-bold [&_h5]:mb-2 [&_h5]:mt-3 [&_h5]:text-[var(--text-color)]/70
-                        [&_a]:text-[var(--accent-color)] [&_a]:no-underline [&_a]:border-b [&_a]:border-[var(--accent-color)]/30 [&_a]:underline-offset-4 [&_a]:hover:border-[var(--accent-color)] [&_a]:hover:bg-[var(--accent-color)]/5 [&_a]:transition-all
-                        [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
-                        [&_p]:my-4
-                        [&_table]:border-collapse [&_table]:border-y-1 [&_table]:border-black [&_table]:my-6 [&_table]:w-full [&_table]:text-xs
-                        [&_th]:border-b-1 [&_th]:border-black [&_th]:border-dashed [&_th]:font-bold [&_th]:p-3 [&_th]:text-center [&_th]:uppercase
-                        [&_td]:border-b [&_td]:border-[var(--text-color)]/10 [&_td]:border-dashed [&_td]:p-3 [&_td]:text-center
-                        [&_blockquote]:border-l-4 [&_blockquote]:italic [&_blockquote]:border-[var(--accent-color)] [&_blockquote]:bg-[var(--accent-color)]/5 [&_blockquote_p]:py-3 [&_blockquote]:px-4 [&_blockquote]:my-4 [&_blockquote]:not-italic [&_blockquote]:text-[0.95rem] [&_blockquote]:text-[var(--text-color)]/80 [&_blockquote]:rounded-r-sm
-                        [&_img]:rounded-sm [&_img]:border-[6px] [&_img]:border-white [&_img]:rotate-1 group-hover:[&_img]:rotate-0 [&_img]:transition-all [&_img]:duration-700
-                        [&_code]:text-[0.85rem] [&_code]:bg-[var(--text-color)]/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-sm [&_code]:font-mono
-                        [&_pre]:bg-[var(--text-color)]/5 [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-6 [&_pre]:border-l-4 [&_pre]:border-[var(--text-color)]/20 [&_pre]:text-sm
-                        [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-inherit
-                        [&_.tag-link]:text-xs [&_.tag-link]:mx-1 [&_.tag-link]:font-bold [&_.tag-link]:uppercase [&_.tag-link]:tracking-wider [&_.tag-link]:text-[var(--text-color)]/30 [&_.tag-link:hover]:text-[var(--accent-color)] [&_.tag-link:hover]:underline [&_.tag-link]:no-underline [&_.tag-link]:transition-colors"
-                  onclick={(e) => {
-                    const target = e.target as HTMLElement;
-                    if (target.classList.contains('tag-link')) {
-                      const tag = target.dataset.tag;
-                      if (tag) memoList.selectTag(tag);
-                    }
-                  }}
-                >
-                  {@html memo.content}
-                </div>
-              </article>
-            {/each}
-          </div>
+    <main use:tagLinks={{ selected: memoList.selectedTag, onSelect: memoList.selectTag }}>
+      {#each Object.entries(memoList.groupedMemos) as [dateKey, memos], i (dateKey)}
+        <section class="section">
+          <h2><span class="num">{i + 1}</span>{format(new Date(dateKey + 'T00:00:00'), 'MMMM d, yyyy')}</h2>
+
+          {#each memos as memo (memo.slug)}
+            <div class="entry" id={memo.slug}>
+              <a class="marginpar" href="#{memo.slug}">{format(memo.date, 'HH:mm')}</a>
+              <div class="memo">
+                {@html memo.content}
+              </div>
+            </div>
+          {/each}
         </section>
       {/each}
-
-      {#if memoList.visibleCount < memoList.filteredMemos.length}
-        <div class="pt-12 text-center border-t border-[#333]/10">
-          <button
-            class="text-lg italic text-[#666] hover:text-[#d33682] transition-colors"
-            onclick={memoList.loadMore}
-          >
-            ❧ Continue Reading...
-          </button>
-        </div>
-      {/if}
-
-      <footer class="mt-20 text-center text-sm text-[#999] italic pb-12">
-        <p>— End of Manuscript —</p>
-      </footer>
     </main>
-  </div>
+
+    {#if memoList.visibleCount < memoList.filteredMemos.length}
+      <div class="more">
+        <button onclick={memoList.loadMore}>Continue to earlier entries</button>
+      </div>
+    {/if}
+
+    <!-- \thanks footnote -->
+    <footer id="colophon" class="footnote">
+      <p><sup>*</sup>Synced from Apple Notes with <a href="https://moire.ooooomo.com/" target="_blank" rel="noopener">Moire</a>. © {new Date().getFullYear()} <Author name={config.author} url={config.authorUrl} />.</p>
+    </footer>
+    <div class="folio" aria-hidden="true">1</div>
+  </article>
 </div>
 
 <style>
-  :global(body) {
-    font-variant-ligatures: common-ligatures;
+  .desk {
+    padding: 3.5rem 1.25rem 4rem;
+  }
+
+  .paper {
+    position: relative;
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 5.5rem 7rem 3rem;
+    background: var(--surface);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 30px -12px rgba(0, 0, 0, 0.18);
+    font-size: 1.125rem;
+    line-height: 1.65;
+  }
+
+  /* ---- \maketitle ---- */
+  .front {
+    text-align: center;
+  }
+
+  .front h1 {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .author,
+  .date {
+    font-size: 1.1875rem;
+  }
+
+  .author {
+    margin-top: 1.5rem;
+  }
+
+  .date {
+    margin-top: 0.6rem;
+  }
+
+  .mark {
+    position: relative;
+    top: -0.45em;
+    font-size: 0.7em;
+    margin-left: 0.1em;
+  }
+
+  /* ---- abstract ---- */
+  .abstract {
+    margin: 2.75rem 3rem 0;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .abstract h2 {
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .abstract p {
+    text-align: justify;
+    text-indent: 1.5em;
+  }
+
+  .abstract .keywords {
+    margin-top: 0.75rem;
+    text-indent: 0;
+  }
+
+  .keywords b {
+    margin-right: 0.35em;
+  }
+
+  .keywords button {
+    cursor: pointer;
+  }
+
+  .keywords button:hover,
+  .keywords button.current {
+    color: var(--link);
+  }
+
+  .keywords button.current {
+    font-style: italic;
+  }
+
+  .keywords .sep {
+    white-space: pre;
+  }
+
+  /* ---- figure 1 ---- */
+  .figure {
+    margin: 2.5rem 0 0;
+    --heat-min: 5px;
+  }
+
+  .figure figcaption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.9375rem;
+  }
+
+  .figure figcaption span {
+    font-weight: 700;
+  }
+
+  .filter {
+    margin-top: 2rem;
+    font-size: 1rem;
+    font-style: italic;
+  }
+
+  .filter i {
+    font-style: normal;
+  }
+
+  .filter button {
+    margin-left: 0.25em;
+    color: var(--link);
+    cursor: pointer;
+  }
+
+  /* ---- sections ---- */
+  main {
+    margin-top: 1rem;
+  }
+
+  .section > h2 {
+    display: flex;
+    gap: 1em;
+    margin: 2.5rem 0 1rem;
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .entry {
+    position: relative;
+  }
+
+  .entry + .entry {
+    margin-top: 1.4rem;
+  }
+
+  /* \marginpar */
+  .marginpar {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.875rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  @media (min-width: 900px) {
+    .marginpar {
+      position: absolute;
+      top: 0.2rem;
+      right: calc(100% + 1.25rem);
+      margin: 0;
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+
+  /* ---- memo body: LaTeX article conventions ---- */
+  .memo {
+    --memo-leading: 1.65;
+    --memo-gap: 0.6em;
+    --memo-head-gap: 1.1em;
+    --h1: 1.125em;
+    --h2: 1em;
+    --h3: 1em;
+    --h-weight: 700;
+    --strong-weight: 700;
+    --link-line: transparent;
+    --quote-border: 0;
+    --quote-ink: var(--text-color);
+    --code-font: var(--moire-latex-mono);
+    --code-radius: 0;
+    --pre-radius: 0;
+    --img-radius: 0;
+    --tag-ink: var(--faint);
+    --tag-hover: var(--link);
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  /* paragraphs: no gap, indent continuation paragraphs */
+  .memo > :global(p + p) {
+    margin-top: 0;
+    text-indent: 2em;
+  }
+
+  /* an Apple Notes "bold line" reads as a \paragraph heading */
+  .memo > :global(p:has(> strong:only-child)) {
+    margin-top: 0.8em;
+    text-indent: 0;
+  }
+
+  .memo > :global(p:has(> strong:only-child) + p),
+  .memo > :global(p:has(> .tag-link:first-child)) {
+    text-indent: 0;
+  }
+
+  .memo > :global(p:has(> .tag-link:first-child)) {
+    margin-top: 0.5em;
+  }
+
+  /* 黑体 for headings and bold, 楷体 for quotations and emphasis */
+  .memo :global(:is(h1, h2, h3, h4, h5, h6)),
+  .memo :global(strong),
+  .memo :global(b),
+  .memo :global(th) {
+    font-family: var(--moire-latex-hei);
+  }
+
+  .memo :global(em),
+  .memo :global(blockquote) {
+    font-family: var(--moire-latex-kai);
+  }
+
+  .memo :global(a:hover) {
+    text-decoration-color: currentColor;
+  }
+
+  /* quote environment */
+  .memo :global(blockquote) {
+    margin-inline: 2em;
+    padding: 0;
+    font-size: 0.95em;
+  }
+
+  .memo :global(ul),
+  .memo :global(ol) {
+    padding-left: 2em;
+    text-align: left;
+  }
+
+  .memo :global(code) {
+    padding: 0;
+    font-size: 0.95em;
+  }
+
+  /* listings with top/bottom rules */
+  .memo :global(pre) {
+    padding: 0.6em 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    text-align: left;
+    border-block: 0.5px solid var(--rule);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* booktabs */
+  .memo :global(table) {
+    width: auto;
+    min-width: 60%;
+    margin-inline: auto;
+    font-size: 0.95em;
+    text-align: left;
+    border-top: 1.5px solid var(--rule);
+    border-bottom: 1.5px solid var(--rule);
+  }
+
+  .memo :global(th),
+  .memo :global(td) {
+    padding: 0.3em 1em;
+    border-bottom: 0;
+  }
+
+  .memo :global(th) {
+    border-bottom: 0.75px solid var(--rule);
+  }
+
+  /* figures: a paragraph holding only an image gets a numbered caption */
+  .memo > :global(p:has(> img:only-child)) {
+    margin-block: 1em;
+    text-indent: 0;
+    text-align: center;
+    counter-increment: figure;
+  }
+
+  .memo > :global(p:has(> img:only-child)::after) {
+    content: 'Figure ' counter(figure) '.';
+    display: block;
+    margin-top: 0.5em;
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  .memo :global(img) {
+    display: inline-block;
+    max-width: 85%;
+  }
+
+  .memo :global(.tag-link) {
+    font-size: 0.875em;
+  }
+
+  .more {
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+
+  .more button {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--link);
+    cursor: pointer;
+  }
+
+  /* ---- footnote + folio ---- */
+  .footnote {
+    margin-top: 4.5rem;
+    padding-top: 0.5rem;
+    width: 40%;
+    border-top: 0.5px solid var(--rule);
+  }
+
+  .footnote p {
+    width: 250%;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .footnote sup {
+    margin-right: 0.15em;
+  }
+
+  .footnote :global(a) {
+    color: var(--link);
+  }
+
+  .folio {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 899px) {
+    .desk {
+      padding: 0;
+    }
+
+    .paper {
+      max-width: none;
+      padding: 3.5rem 1.4rem 2rem;
+      box-shadow: none;
+      font-size: 1.0625rem;
+    }
+
+    .abstract {
+      margin-inline: 0.75rem;
+    }
+
+    .memo {
+      text-align: left;
+    }
   }
 </style>

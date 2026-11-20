@@ -25,7 +25,10 @@ export default {
   title: "My Moire Blog",
   
   // 作者名称
-  author: "Aeris",
+  author: "OMO",
+
+  // 作者主页（可选），页脚的作者名会链接到这里
+  authorUrl: "http://ooooomo.com/",
   
   // 网站描述
   description: "My personal blog powered by Moire",
@@ -66,6 +69,12 @@ export default {
 - RSS feed
 - SEO meta 标签
 
+### authorUrl
+
+**类型**：`string`（可选）
+
+作者主页。填写后，页脚里的作者名会变成指向这里的链接。
+
 ### description
 
 **类型**：`string`  
@@ -100,7 +109,7 @@ export default {
 ### theme
 
 **类型**：`string`  
-**可选值**：`"classic"` | `"receipt"` | `"cyberpunk"` | `"academic"` | `"pixel"` | `"bento"`
+**可选值**：`"classic"` | `"receipt"` | `"noir"` | `"academic"` | `"pixel"` | `"bento"`
 
 主题风格，详见[主题风格](/docs/customization/themes/)章节。
 
@@ -111,7 +120,7 @@ export default {
 ```typescript
 export default {
   title: "莫尔的笔记本",
-  author: "Aeris",
+  author: "OMO",
   description: "记录技术、生活与思考",
   pageSize: 8,
   theme: "academic",

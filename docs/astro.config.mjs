@@ -54,7 +54,7 @@ export default defineConfig({
             badge: 'demo',
             }],
           footerText:
-            'Moire is a project syncing Apple Notes to GitHub Pages, designed by [Yanxin](https://github.com/anig1scur).'
+            'Moire is a project syncing Apple Notes to GitHub Pages, made by [OMO](http://ooooomo.com/).'
         })
       ],
       social: [

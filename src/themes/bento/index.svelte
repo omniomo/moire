@@ -1,162 +1,319 @@
 <script lang="ts">
-  import { slide } from 'svelte/transition';
-  import {format} from 'date-fns';
-  import {config} from '../../../moire.config';
-  import {createMemoList} from '$lib/memo.svelte';
-  import type {PageData} from '../../routes/$types';
-  import {marked} from 'marked';
+  import { format } from 'date-fns';
+  import type { PageData } from '../../routes/$types';
+  import { createMemoList } from '$lib/memo.svelte';
+  import { tagLinks } from '$lib/tags';
+  import { countDays } from '$lib/theme-utils';
+  import Author from '$lib/components/Author.svelte';
   import Heatmap from '$lib/components/Heatmap.svelte';
+  import Shader from './Shader.svelte';
 
-  let {data}: {data: PageData} = $props();
+  let { data, config }: { data: PageData; config: any } = $props();
   const memoList = createMemoList(() => data, config);
+
+  const daysWritten = $derived(countDays(data.memos));
 
   $effect(() => {
     if (memoList.selectedTag) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   });
-
-  function handleMouseMove(e: MouseEvent) {
-    const target = e.currentTarget as HTMLElement;
-    const rect = target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    target.style.setProperty('--x', `${x}px`);
-    target.style.setProperty('--y', `${y}px`);
-  }
 </script>
 
-<div class="fixed inset-0 -z-50 h-full w-full bg-[#f0f2f5]"
-     style="background-image: radial-gradient(at 0% 0%, rgba(200, 220, 255, 0.6) 0px, transparent 30%),
-      radial-gradient(at 100% 0%, rgba(242, 235, 222, 0.6) 0px, transparent 30%),
-      radial-gradient(at 100% 100%, rgba(200, 235, 240, 0.6) 0px, transparent 30%),
-      radial-gradient(at 0% 100%, rgba(215, 230, 200, 0.6) 0px, transparent 30%);">
-</div>
+<Shader />
 
-<div class="min-h-screen py-8 max-w-2xl mx-auto {config.theme} font-sans">
-  <header class="mx-auto mb-8 md:mb-16 px-4">
-    <h1 class="mb-3 text-4xl font-bold tracking-tight text-slate-700">{config.title}</h1>
-    <p class=" text-slate-500/80">{config.description}</p>
-    
-    {#if memoList.selectedTag}
-      <div class="mt-8 flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-        <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Filtering by:</span>
-        <button
-          onclick={() => memoList.selectTag(null)}
-          class="flex items-center gap-2 rounded-full bg-slate-500/10 px-4 py-1.5 text-sm font-semibold italic text-slate-600 border border-slate-200/50 hover:bg-slate-500/20 transition-all group"
-        >
-          #{memoList.selectedTag}
-          <span class="text-slate-600 group-hover:text-slate-800 transition-colors">✕</span>
-        </button>
-      </div>
+<div class="page min-h-screen">
+  <header class="masthead">
+    <h1>{config.title}</h1>
+    {#if config.description}
+      <p>{config.description}</p>
     {/if}
   </header>
 
-  {#if config.heatmap}
-    <div class="mb-10 px-4">
-      <div class="rounded-2xl md:rounded-[2rem] border border-white/50 bg-white/30 p-2 md:p-6 shadow-sm backdrop-blur-3xl backdrop-saturate-150 relative z-30 overflow-hidden">
+  <section class="tiles" aria-label="Overview">
+    {#if config.heatmap}
+      <div class="tile tile-activity">
+        <div class="tile-label">Activity</div>
         <Heatmap memos={data.memos} />
       </div>
+    {/if}
+    <div class="tile stat">
+      <span class="value">{data.memos.length}</span>
+      <span class="label">Memos</span>
+    </div>
+    <div class="tile stat">
+      <span class="value">{daysWritten}</span>
+      <span class="label">Days written</span>
+    </div>
+    <div class="tile stat">
+      <span class="value">{memoList.allTags.length}</span>
+      <span class="label">Tags</span>
+    </div>
+  </section>
+
+  {#if memoList.selectedTag}
+    <div class="filter">
+      <span>Showing</span>
+      <button onclick={() => memoList.selectTag(null)} aria-label="Clear tag filter">
+        #{memoList.selectedTag}
+        <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+      </button>
+      <span class="count">{memoList.filteredMemos.length} {memoList.filteredMemos.length === 1 ? 'memo' : 'memos'}</span>
     </div>
   {/if}
 
-  <div class="mx-auto grid grid-cols-1 gap-6 px-4 2xl:grid-cols-2" data-selected-tag={memoList.selectedTag}>
-    {#each memoList.visibleMemos as memo, i (memo.slug)}
-      <div
-        class="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/50 bg-white/30 p-3 md:p-7 shadow-sm backdrop-blur-3xl backdrop-saturate-150 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] animate-in fade-in slide-in-from-bottom-8 duration-700"
-        in:slide
-        onmousemove={handleMouseMove}
-        id={memo.slug}
-        style="--x: 50%; --y: 50%; animation-delay: {(i % 15) * 100}ms; animation-fill-mode: both;"
-      >
-        <div
-          class="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
-          style="background: radial-gradient(800px circle at var(--x) var(--y), rgba(129, 110, 216, 0.06), transparent 50%);"
-        ></div>
-        <div class="relative z-10 flex h-full flex-col">
-          <div
-            class="mb-6 text-[0.95rem] tracking-wide
-                   [&_h1]:text-[1.25rem] [&_h1]:font-bold [&_h1]:mb-2 [&_h1]:mt-5 [&_h1]:text-slate-700
-                   [&_h2]:text-[1.15rem]  [&_h2]:font-semibold [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-slate-700
-                   [&_h3]:text-[1.05rem] [&_h3]:font-semibold [&_h3]:mb-1.5 [&_h3]:mt-3 [&_h3]:text-slate-700
-                   [&_h4]:text-[0.95rem] [&_h4]:font-semibold [&_h4]:mb-1 [&_h4]:mt-2 [&_h4]:text-slate-700
-                   [&_h5]:text-[0.85rem] [&_h5]:font-medium [&_h5]:italic [&_h5]:mb-1 [&_h5]:text-slate-700
-                   [&_p]:my-4 [&_p]:text-slate-600 tracking-wider 
-                   [&_ul]:list-disc [&_ul]:pl-5
-                   [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-4
-                   [&_li]:text-slate-600 [&_li]:my-1
-                   [&_li::marker]:text-slate-400
-                   [&_a]:text-slate-400 [&_a]:underline [&_a]:decoration-1 [&_a]:underline-offset-2 [&_a]:hover:bg-slate-50
-                   [&_strong]:text-slate-600
-                   [&_table]:w-full [&_table]:border-collapse [&_table]:my-5 [&_table]:text-sm
-                   [&_th]:border-b-2 [&_th]:border-slate-200 [&_th]:border-dashed [&_th]:text-center [&_th]:py-1 [&_th]:font-semibold [&_th]:text-slate-700
-                   [&_td]:py-1 [&_td]:px-1 [&_td]:border-b [&_td]:border-slate-100 [&_td]:border-dashed [&_td]:text-slate-600 [&_td]:text-center
-                   [&_blockquote]:border-l-2 [&_blockquote]:border-slate-300/70 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-3 [&_blockquote_p]:my-1 [&_blockquote]:text-slate-600 [&_blockquote]:bg-white/30 [&_blockquote]:rounded-r-lg
-                   [&_code]:text-[0.85rem] [&_code]:bg-slate-100 [&_code]:text-slate-700 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono
-                   [&_pre]:bg-slate-50/50 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-slate-200/50 [&_pre]:overflow-x-auto [&_pre]:my-4 [&_pre]:text-sm
-                   [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-slate-700
-                   [&_.tag-link]:rounded-full [&_.tag-link]:px-3 [&_.tag-link]:py-1 [&_.tag-link]:text-xs [&_.tag-link]:font-medium [&_.tag-link]:tracking-wide [&_.tag-link]:transition-all [&_.tag-link]:bg-white/40 [&_.tag-link]:text-slate-600 [&_.tag-link]:no-underline [&_.tag-link]:mx-0.5 [&_.tag-link:hover]:bg-white/80 [&_.tag-link:hover]:text-slate-800"
-             onclick={(e) => {
-                const target = e.target as HTMLElement;
-                if (target.classList.contains('tag-link')) {
-                    e.stopPropagation(); 
-                    const tag = target.dataset.tag;
-                    if (tag) memoList.selectTag(tag);
-                }
-             }}
-          >
-            {@html marked.parse(memo.content)}
-          </div>
-
-          <div
-            class="mt-auto flex items-center justify-between pt-4 text-xs font-semibold tracking-wide text-slate-400/80 uppercase"
-          >
-            <span>{format(new Date(memo.date), 'MMM d, yyyy')}</span>
-          </div>
+  <main class="cards" use:tagLinks={{ selected: memoList.selectedTag, onSelect: memoList.selectTag }}>
+    {#each memoList.visibleMemos as memo (memo.slug)}
+      <article class="card" id={memo.slug}>
+        <header>
+          <time datetime={new Date(memo.date).toISOString()}>{format(memo.date, 'EEEE, MMM d, yyyy')}</time>
+          <span>{format(memo.date, 'HH:mm')}</span>
+        </header>
+        <div class="memo">
+          {@html memo.content}
         </div>
-      </div>
+      </article>
     {/each}
-  </div>
+  </main>
 
   {#if memoList.visibleMemos.length < memoList.filteredMemos.length}
-    <div class="mt-16 flex justify-center pb-16">
-      <button
-        onclick={memoList.loadMore}
-        class="rounded-full bg-white/50 px-8 py-3 text-sm font-semibold text-slate-600 backdrop-blur-md transition-all hover:bg-white/80 hover:text-slate-900 hover:shadow-lg"
-      >
-        Load More
-      </button>
+    <div class="more">
+      <button onclick={memoList.loadMore}>Show more</button>
     </div>
   {/if}
-  <footer class="mt-20 text-center text-xs mx-5 tracking-wide text-slate-500 opacity-80">
-    <p>© {new Date().getFullYear()} {config.author}, synced from Apple Notes and powered by <a href="https://moire.ooooomo.com/" target="_blank" class="hover:text-slate-600 transition-colors">Moire</a></p>
+
+  <footer>
+    © {new Date().getFullYear()} <Author name={config.author} url={config.authorUrl} /> · Synced from Apple Notes with <a href="https://moire.ooooomo.com/" target="_blank" rel="noopener">Moire</a>
   </footer>
 </div>
 
 <style>
-  :global(body.bento) {
-    background-color: #f0f2f5;
+  .page {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 4rem 1rem 3rem;
   }
 
-  [data-selected-tag] :global(.tag-link) {
-      transition: all 0.2s ease;
+  .masthead {
+    padding: 0 0.5rem;
   }
 
-  /* When a tag is selected, dim other tags and highlight the active one */
-  [data-selected-tag]:not([data-selected-tag="null"]) :global(.tag-link) {
-      opacity: 0.5;
+  .masthead h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
   }
 
-  [data-selected-tag="Academic"] :global(.tag-link[data-tag="Academic"]),
-  [data-selected-tag="Bento"] :global(.tag-link[data-tag="Bento"]),
-  [data-selected-tag="Cyberpunk"] :global(.tag-link[data-tag="Cyberpunk"]),
-  [data-selected-tag="Pixel"] :global(.tag-link[data-tag="Pixel"]),
-  [data-selected-tag="Receipt"] :global(.tag-link[data-tag="Receipt"]),
-  [data-selected-tag]:not([data-selected-tag="null"]) :global(.tag-link.active) {
-      opacity: 1 !important;
-      background-color: rgb(79, 70, 229, 0.1) !important;
-      color: rgb(79, 70, 229) !important;
-      border-color: rgb(79, 70, 229, 0.2) !important;
-      font-weight: 700 !important;
+  .masthead p {
+    margin-top: 0.6rem;
+    font-size: 1.0625rem;
+    color: var(--muted);
+    letter-spacing: -0.005em;
+  }
+
+  /* ---- bento overview ---- */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  /* frosted white: the colour field tints through, text stays on a calm surface */
+  .tile,
+  .card,
+  .more button {
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(28px) saturate(1.5);
+    backdrop-filter: blur(28px) saturate(1.5);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+      0 1px 2px rgba(15, 23, 42, 0.04),
+      0 10px 30px -18px rgba(15, 23, 42, 0.18);
+  }
+
+  .tile {
+    border-radius: 1.125rem;
+    padding: 1.1rem 1.25rem;
+  }
+
+  .tile-activity {
+    grid-column: 1 / -1;
+    padding: 1.25rem 1.5rem 1.4rem;
+  }
+
+  .tile-label {
+    margin-bottom: 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .stat .value {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat .label {
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  /* ---- filter ---- */
+  .filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 2rem 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .filter button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    color: var(--accent-color);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .filter .count {
+    margin-left: auto;
+  }
+
+  /* ---- cards ---- */
+  .cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .card {
+    border-radius: 1.375rem;
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+
+  .card > header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.8125rem;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .memo {
+    --memo-leading: 1.7;
+    --h1: 1.3125em;
+    --h2: 1.125em;
+    --h-tracking: -0.015em;
+    --pre-radius: 0.875rem;
+    --code-radius: 6px;
+    --quote-border: 3px solid rgba(0, 0, 0, 0.08);
+    --code-bg: rgba(0, 0, 0, 0.045);
+    --rule: rgba(0, 0, 0, 0.08);
+  }
+
+  .memo :global(a) {
+    text-decoration-color: color-mix(in srgb, var(--link) 35%, transparent);
+  }
+
+  .memo :global(img) {
+    border-radius: 0.875rem;
+  }
+
+  .memo :global(.tag-link) {
+    display: inline-block;
+    margin: 0.15rem 0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.045);
+    color: var(--muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .memo :global(.tag-link:hover) {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-color);
+  }
+
+  .memo :global(.tag-link.active) {
+    background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+    color: var(--accent-color);
+  }
+
+  .more {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .more button {
+    padding: 0.65rem 1.4rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--accent-color);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .more button:hover {
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  footer {
+    margin-top: 4rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--faint);
+  }
+
+  footer :global(a:hover) {
+    color: var(--text-color);
+  }
+
+  @media (max-width: 520px) {
+    .page {
+      padding-top: 3rem;
+    }
+
+    .masthead h1 {
+      font-size: 2rem;
+    }
+
+    .tile {
+      padding: 0.9rem 1rem;
+    }
+
+    .stat .value {
+      font-size: 1.375rem;
+    }
+
+    .stat .label {
+      font-size: 0.75rem;
+    }
+
+    .card {
+      padding: 1.25rem 1.25rem 1.4rem;
+    }
   }
 </style>

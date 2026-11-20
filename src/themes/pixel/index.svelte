@@ -3,11 +3,12 @@
   import {config} from '../../../moire.config';
   import {createMemoList} from '$lib/memo.svelte';
   import type {PageData} from '../../routes/$types';
-  import {marked} from 'marked';
   import {format} from 'date-fns';
   import pixelIdle from '$lib/assets/pixel-idle.png';
   import pixelRun from '$lib/assets/pixel-run.png';
+  import Author from '$lib/components/Author.svelte';
   import Heatmap from '$lib/components/Heatmap.svelte';
+  import { tagLinks } from '$lib/tags';
 
   let {data}: {data: PageData} = $props();
   const memoList = createMemoList(() => data, config);
@@ -69,7 +70,7 @@
     </div>
   {/if}
 
-  <div class="mx-auto grid grid-cols-1 gap-8 2xl:grid-cols-2" data-selected-tag={memoList.selectedTag}>
+  <div class="mx-auto grid grid-cols-1 gap-8 2xl:grid-cols-2" data-selected-tag={memoList.selectedTag} use:tagLinks={{ selected: memoList.selectedTag, onSelect: memoList.selectTag }}>
     {#each memoList.visibleMemos as memo (memo.slug)}
       <article
         in:slide
@@ -114,15 +115,8 @@
                         [&_pre_code]:bg-transparent [&_pre_code]:text-[var(--text-color)] [&_pre_code]:p-0
                         [&_.tag-link]:bg-[var(--bg-color)] [&_.tag-link]:text-[var(--accent-color)] [&_.tag-link]:px-2 [&_.tag-link]:py-0.5 [&_.tag-link]:rounded-full [&_.tag-link]:text-[11px] [&_.tag-link]:no-underline [&_.tag-link]:mx-0.5 [&_.tag-link]:font-bold [&_.tag-link]:transition-all [&_.tag-link]:hover:scale-110
                         "
-             onclick={(e) => {
-                const target = e.target as HTMLElement;
-                if (target.classList.contains('tag-link')) {
-                    const tag = target.dataset.tag;
-                    if (tag) memoList.selectTag(tag);
-                }
-             }}
           >
-            {@html marked.parse(memo.content)}
+            {@html memo.content}
           </div>
         </div>
 
@@ -152,13 +146,13 @@
 
   <footer class="mt-16 pb-2 text-center text-[10px] font-bold tracking-widest text-[var(--text-color)] opacity-70">
       <p class="uppercase">
-          © {new Date().getFullYear()} {config.author} <span class="mx-1 text-[var(--accent-color)]">♥</span> synced from Apple Notes and powered by <a href="https://moire.ooooomo.com/" target="_blank" class="hover:text-[var(--accent-color)] transition-colors border-b-2 border-dotted border-[var(--text-color)] hover:border-[var(--accent-color)]">MOIRE</a>
+          © {new Date().getFullYear()} <Author name={config.author} url={config.authorUrl} class="hover:text-[var(--accent-color)] transition-colors border-b-2 border-dotted border-[var(--text-color)] hover:border-[var(--accent-color)]" /> <span class="mx-1 text-[var(--accent-color)]">♥</span> synced from Apple Notes and powered by <a href="https://moire.ooooomo.com/" target="_blank" class="hover:text-[var(--accent-color)] transition-colors border-b-2 border-dotted border-[var(--text-color)] hover:border-[var(--accent-color)]">MOIRE</a>
       </p>
   </footer>
 
   <div class="fixed bottom-8 right-8 z-50 hidden md:block">
     <div
-      class="relative h-16 w-16 image-pixelated transition-transform duration-100"
+      class="relative h-[66px] w-[66px] image-pixelated transition-transform duration-100"
       class:translate-y-[-2px]={isMoving}
     >
       {#if isMoving}
@@ -222,12 +216,6 @@
   }
 
   /* Active tag gets inverted pixel look */
-  [data-selected-tag="Academic"] :global(.tag-link[data-tag="Academic"]),
-  [data-selected-tag="Bento"] :global(.tag-link[data-tag="Bento"]),
-  [data-selected-tag="Cyberpunk"] :global(.tag-link[data-tag="Cyberpunk"]),
-  [data-selected-tag="Pixel"] :global(.tag-link[data-tag="Pixel"]),
-  [data-selected-tag="Receipt"] :global(.tag-link[data-tag="Receipt"]),
-  /* Generic selector that works for any tag if the attribute matches exactly */
   [data-selected-tag]:not([data-selected-tag="null"]) :global(.tag-link.active) {
       opacity: 1 !important;
       filter: grayscale(0) !important;

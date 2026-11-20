@@ -10,8 +10,9 @@
     let loader: () => Promise<any>;
     if (__MOIRE_THEME__ === 'receipt') {
         loader = () => import('$themes/receipt/index.svelte');
-    } else if (__MOIRE_THEME__ === 'cyberpunk') {
-        loader = () => import('$themes/cyberpunk/index.svelte');
+    } else if (__MOIRE_THEME__ === 'noir' || __MOIRE_THEME__ === 'cyberpunk') {
+        // `cyberpunk` was retired; existing configs get noir
+        loader = () => import('$themes/noir/index.svelte');
     } else if (__MOIRE_THEME__ === 'academic') {
         loader = () => import('$themes/academic/index.svelte');
     } else if (__MOIRE_THEME__ === 'bento') {
@@ -54,16 +55,16 @@
 </svelte:head>
 
 {#if import.meta.env.VITE_MOIRE_NAV === 'true'}
-    <nav aria-label="Moire" class="mx-auto flex max-w-2xl justify-end gap-5 px-5 pt-5 text-sm text-gray-600 md:px-12">
-        <a class="hover:underline" href="/docs/" rel="external">Docs</a>
-        <a class="hover:underline" href="/themes/" rel="external">Themes</a>
+    <nav aria-label="Moire" class="mx-auto flex max-w-2xl justify-end gap-5 px-5 pt-5 text-[0.8125rem] md:px-12">
+        <a class="opacity-55 transition-opacity hover:opacity-100" href="/docs/" rel="external">Docs</a>
+        <a class="opacity-55 transition-opacity hover:opacity-100" href="/themes/" rel="external">Themes</a>
     </nav>
 {/if}
 
 {#if ThemeComponent}
     <ThemeComponent {data} {config} />
 {:else}
-    <!-- Simple loading state to avoid flash -->
-    <div class="min-h-screen flex items-center justify-center">Loading...</div>
+    <!-- Keep the page blank (theme background only) until the theme chunk arrives -->
+    <div class="min-h-screen"></div>
 {/if}
 

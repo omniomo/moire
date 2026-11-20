@@ -30,26 +30,26 @@ theme: "receipt"
 
 ---
 
-### Cyberpunk (Hacker Style)
+### Noir (Pure Black)
 
 **Features**:
-- 💻 Hacker terminal style
-- ⚡ Dynamic scanline effects
+- ⬛️ Pure black, single column, no decoration
+- 🌙 Comfortable for reading at night
 
 **Preview**:
 ```typescript
-theme: "cyberpunk"
+theme: "noir"
 ```
 
-![](../../customization/cyberpunk.png)
+> The old `cyberpunk` theme has been retired. Sites whose config still says `"cyberpunk"` get Noir automatically.
 
 ---
 
-### Academic (Formal Style)
+### Academic (Paper Style)
 
 **Features**:
-- 🎓 Serif fonts
-- 📄 Formal notebook layout
+- 🎓 Typeset like a LaTeX paper: Computer Modern, title block, abstract and keywords
+- 📄 Numbered sections, booktabs tables, figure captions and a footnote; Chinese uses Song for body text, Hei for headings and Kai for quotations
 
 **Preview**:
 ```typescript
@@ -75,8 +75,8 @@ theme: "pixel"
 
 ### Bento (Modern Style)
 
-- Rounded card layout
-- Fluid background
+- A slowly drifting pastel colour field behind frosted white cards
+- An overview grid on top: activity, notes, days written, tags
 
 **Preview**:
 ```typescript
@@ -93,7 +93,7 @@ Modify the `theme` field in `moire.config.ts`:
 ```typescript
 export default {
   title: "My Blog",
-  theme: "cyberpunk", // Change to your desired theme
+  theme: "noir", // Change to your desired theme
   // ... other configs
 }
 ```
