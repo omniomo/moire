@@ -1,0 +1,119 @@
+---
+title: 部署网站
+description: Fork 仓库并配置 GitHub 发布网站
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+本章将指导你完成 Moire 网站的部署，包括 Fork 仓库、开启 Actions、配置 Pages 和生成 Token。
+
+## Step 1: Fork 仓库
+
+<Steps>
+
+1. 打开 [Moire 仓库](https://github.com/omniomo/moire)
+
+2. 点击右上角的 **Fork** 按钮
+
+3. 点击 **Create fork**
+
+</Steps>
+
+![](./create-fork.png)
+
+## Step 2: 开启 Actions
+
+:::danger[重点步骤]
+Fork 的仓库默认**禁用** GitHub Actions，必须手动开启，否则网站无法自动构建。
+:::
+
+<Steps>
+
+1. 进入你 Fork 的仓库
+
+2. 点击顶部的 **Actions** 标签
+
+3. 点击绿色按钮 **I understand my workflows, go ahead and enable them**
+
+</Steps>
+
+![](./enable-actions.png)
+
+## Step 3: 配置 Pages
+
+:::danger[重点步骤]
+必须将 Pages 的构建方式设置为 GitHub Actions，否则部署会失败。
+:::
+
+<Steps>
+
+1. 在 **Settings** 页面，左侧菜单找到 **Pages**
+
+2. 在 "Build and deployment" 下的 **Source** 选择 **GitHub Actions**
+
+3. 无需其他配置，返回即可
+
+</Steps>
+
+
+![](./github-pages-action.png)
+
+
+## Step 4: 生成 Token
+
+你需要生成一个 GitHub Personal Access Token (PAT)，让快捷指令能够上传笔记到仓库。
+
+<Steps>
+
+1. 打开 [GitHub Developer Settings](https://github.com/settings/tokens?type=beta)
+
+2. 点击 **Generate new token**
+
+3. 填写 Token 信息：
+    - **Token name**: `Moire Sync` (或任意名称)
+    - **Expiration**: 建议选择 90 天或更长
+    - **Repository access**: 选择 **Only select repositories**，然后选 Fork 的 Moire 仓库
+
+4. 在 **Permissions** 下配置权限：
+
+    | 权限 | 级别 | 说明 |
+    |------|------|------|
+    | **Contents** | Read and write | 上传笔记文件 |
+    | **Workflows** | Read and write | 触发构建流程 |
+
+5. 点击 **Generate token**
+
+6. **复制并保存** 生成的 Token
+
+    :::caution[Token 只显示一次]
+    Token 生成后只会显示一次，请立即复制并暂时保存，待后续配置需使用。如果丢失，需要重新生成。
+    :::
+
+</Steps>
+
+## Token 格式说明
+
+Fine-grained PAT 的格式类似：
+
+```
+github_pat_xxxxxxxxxxxxxxxxxxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+:::tip[区分 Token 类型]
+- `github_pat_` 开头：Fine-grained PAT（推荐）
+- `ghp_` 开头：Classic PAT（旧版）
+
+建议使用 Fine-grained PAT，权限更精细，更安全。
+:::
+
+## 下一步
+
+Token 生成完毕后，让我们验证一下部署是否成功！
+
+import { LinkCard } from '@astrojs/starlight/components';
+
+<LinkCard
+  title="验证状态"
+  description="确认网站部署成功"
+  href="/getting-started/verification/"
+/>

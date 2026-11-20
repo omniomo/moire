@@ -1,0 +1,145 @@
+---
+title: Markdown 支持
+description: 了解 Moire 支持的 Markdown 语法
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Apple Notes 的 富文本格式比较复杂，Moire 支持将其转换为少量 Markdown 语法，以下是功能清单。
+
+![note-example](markdown-support.png)
+
+## Moire 已支持
+
+### 文本格式
+
+| 语法 | 效果 |
+|------|------|
+| `**粗体**` | **粗体** |
+| `*斜体*` | *斜体* |
+| `~~删除线~~` | ~~删除线~~ |
+
+
+### 标题
+
+```markdown
+## 二级标题
+### 三级标题
+```
+
+是的，只支持 H2 和 H3，分别对应 Notes 的 `Title` 和 `Subtitle`。因为 Notes 中的 `Subheading` 实际与 body 大小一致，无法有效区分。
+
+### 链接
+
+```markdown
+[链接文本](https://example.com)
+```
+
+效果：[链接文本](https://example.com)
+
+### 列表
+
+**无序列表**：
+```markdown
+- 项目 1
+- 项目 2
+  - 子项目 2.1
+```
+
+**有序列表**：
+```markdown
+1. 第一步
+2. 第二步
+3. 第三步
+```
+
+**任务列表**：
+```markdown
+* [ ] 项目 1
+  * [x] 项目 1.1
+* [ ] 项目 2
+  * [ ] 项目 2.1
+```
+
+### 代码块
+
+Apple Notes 中的 **等宽 (Monostyled)** 格式内容会被转换为 Markdown 的代码块。
+
+```python
+a = 5
+b = 10
+a, b = b, a
+print(f"a is now {a}, b is now {b}")
+```
+
+### 引用
+
+````markdown
+> 这是一个引用
+> 可以用来强调重要内容
+````
+
+效果：
+> 这是一个引用
+> 可以用来强调重要内容
+
+
+### 图片
+
+```markdown
+![图片描述](image-url.png)
+```
+
+:::note[图片上传限制]
+每篇笔记最多支持 1 张图片上传，详见[图片上传机制](/usage/images/)。
+:::
+
+### 表格
+
+效果：
+
+| 表头1 | 表头2 |
+|------|------|
+| 内容1 | 内容2 |
+
+## 已知问题
+
+#### 样式丢失
+
+如果标题或正文的头尾包含空格，转换时可能会丢失加粗、斜体等样式。
+
+#### 多端差异
+
+iOS 和 macOS 导出的样式不完全同步。iOS 会丢失标题中的样式（如加粗），且导出的文本可能包含更多空换行。
+
+#### macOS 标题行为
+在 macOS 上，笔记的第一行会被强制识别为“加粗的二级标题”，这是系统接口的限制。
+
+## 最佳实践
+
+### 1. 保持简单
+
+使用基础 Markdown 语法，避免依赖高级功能。
+
+### 2. 善用列表
+
+列表比大段文字更易读，优点：
+
+- 简洁清晰
+- 易于扫描
+
+### 3. 适当配图
+
+一张图胜过千言万语，但不要贪多（限制 1 张）。
+
+## 下一步
+
+了解图片上传的工作机制和限制。
+
+import { LinkCard } from '@astrojs/starlight/components';
+
+<LinkCard
+  title="图片上传机制"
+  description="了解如何在笔记中使用图片"
+  href="/usage/images/"
+/>

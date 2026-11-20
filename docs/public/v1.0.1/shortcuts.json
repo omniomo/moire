@@ -1,0 +1,32 @@
+{
+  "suite_name": "Moire",
+  "current_version": "1.0.1",
+  "release_date": "2026-02-15",
+  "update_notes": "1. 使用 utc 时间 2. 支持 todo list 3. 支持 monospace -> code 4. 跳过时间差超过 5 分钟的改动",
+  "installer_config": {
+    "min_ios_version": "16.0",
+    "config_path": "Shortcuts/Moire/config.json"
+  },
+  "shortcuts": [
+    {
+      "id": "config",
+      "name": "Moire: Config",
+      "url": "https://www.icloud.com/shortcuts/efeb4ea92d4a43b6965f64a156f66129"
+    },
+    {
+      "id": "upload_image",
+      "name": "Moire: Upload Image to Github",
+      "url": "https://www.icloud.com/shortcuts/0d46998d9dff4f12bf84eb996a441a0b"
+    },
+    {
+      "id": "clean_note",
+      "name": "Moire: Clean Note to Markdown",
+      "url": "https://www.icloud.com/shortcuts/7ba17ffdeafc459eb4a71f42589586fa"
+    },
+    {
+      "id": "sync",
+      "name": "Moire: Sync Notes to Github",
+      "url": "https://www.icloud.com/shortcuts/f49acddb30f74c619e3730a4e4362d95"
+    }
+  ]
+}

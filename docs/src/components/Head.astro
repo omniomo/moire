@@ -1,0 +1,73 @@
+---
+import StarlightHead from '@astrojs/starlight/components/Head.astro';
+import { ClientRouter } from 'astro:transitions';
+
+const props = Astro.props;
+---
+
+<StarlightHead {...props} />
+<ClientRouter />
+
+<script is:inline>
+  (function() {
+    // Only redirect on root (zh) pages, not already on /en/
+    if (window.location.pathname.startsWith('/en')) return;
+    // Only redirect once per session
+    if (sessionStorage.getItem('lang-redirected')) return;
+    var lang = navigator.language || navigator.userLanguage || '';
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (!lang.startsWith('zh') && tz !== 'Asia/Shanghai' && tz !== 'Asia/Beijing') {
+      sessionStorage.setItem('lang-redirected', '1');
+      window.location.replace('/en' + window.location.pathname);
+    }
+  })();
+</script>
+
+<script>
+  import mediumZoom from 'medium-zoom';
+  import { init, trackEvent } from '@aptabase/web';
+
+  // Persist sidebar scroll position across page navigations
+  function persistSidebarScroll() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    // Restore scroll position
+    const savedPosition = sessionStorage.getItem('sidebar-scroll-y');
+    if (savedPosition) {
+      sidebar.scrollTop = parseInt(savedPosition, 10);
+    }
+
+    // Save scroll position
+    sidebar.addEventListener('scroll', () => {
+      sessionStorage.setItem('sidebar-scroll-y', sidebar.scrollTop.toString());
+    }, { passive: true });
+  }
+
+  let zoom;
+
+  function initImageZoom() {
+    const images = document.querySelectorAll('.sl-markdown-content img');
+
+    if (zoom) {
+      zoom.detach();
+    }
+    
+    zoom = mediumZoom(images, {
+      margin: 24,
+      background: 'rgba(0, 0, 0, 0.8)',
+    });
+  }
+
+  function initAptabase() {
+    init('A-US-7650320372', { appVersion: location.pathname });
+    trackEvent('page_view');
+  }
+
+  // Run on initial load and view transitions
+  document.addEventListener('astro:page-load', () => {
+    persistSidebarScroll();
+    initImageZoom();
+    initAptabase();
+  });
+</script>
