@@ -1,6 +1,8 @@
 import { config } from '../../../moire.config';
 import { getMemos } from '$lib/server/memos';
 
+export const prerender = true;
+
 export async function GET() {
   const memos = await getMemos();
   const headers = { 'Content-Type': 'application/xml' };

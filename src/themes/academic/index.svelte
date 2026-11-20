@@ -66,7 +66,7 @@
         </div>
 
                   <p class="hidden md:block absolute bottom-6 text-xs opacity-60">
-          © {new Date().getFullYear()} {config.author}, powered by <a href="https://moire.blog/" target="_blank" class="inline hover:underline">MOIRE.BLOG</a>
+          © {new Date().getFullYear()} {config.author}, powered by <a href="https://moire.ooooomo.com/" target="_blank" class="inline hover:underline">MOIRE</a>
         </p>
       </header>
       

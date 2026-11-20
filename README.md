@@ -8,7 +8,7 @@
     Sync your thoughts from Apple Notes to GitHub Pages by Shortcuts.
   </p>
   <p>
-    <a href="https://moire.blog">Moire</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://docs.moire.blog">Docs</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://themes.moire.blog">Themes</a>
+    <a href="https://moire.ooooomo.com">Moire</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://moire-docs.ooooomo.com">Docs</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="https://moire-themes.ooooomo.com">Themes</a>
   </p>
   <br/>
   <img src="images/moire.png" width="100%" alt="Moire Preview">
@@ -39,7 +39,7 @@ Ensure you have the following installed:
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/moirelog/moire.git
+git clone https://github.com/omniomo/moire.git
 cd moire
 pnpm install
 ```

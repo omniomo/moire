@@ -129,7 +129,7 @@
     </div>
   {/if}
   <footer class="mt-20 text-center text-xs mx-5 tracking-wide text-slate-500 opacity-80">
-    <p>© {new Date().getFullYear()} {config.author}, synced from Apple Notes and powered by <a href="https://moire.blog/" target="_blank" class="hover:text-slate-600 transition-colors">Moire</a></p>
+    <p>© {new Date().getFullYear()} {config.author}, synced from Apple Notes and powered by <a href="https://moire.ooooomo.com/" target="_blank" class="hover:text-slate-600 transition-colors">Moire</a></p>
   </footer>
 </div>
 

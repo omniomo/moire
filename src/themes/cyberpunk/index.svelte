@@ -278,6 +278,6 @@
     <footer class="mt-20 mx-12 text-center text-xs tracking-widest pb-8">
             © {new Date().getFullYear()} {config.author}
             <span class="mx-2 text-[var(--accent-color)]">::</span>
-            synced from Apple Notes and powered by <a href="https://moire.blog/" target="_blank" class="text-[var(--accent-color)] hover:bg-[var(--accent-color)] hover:text-[var(--bg-color)] transition-colors px-1">MOIRE.BLOG</a>
+            synced from Apple Notes and powered by <a href="https://moire.ooooomo.com/" target="_blank" class="text-[var(--accent-color)] hover:bg-[var(--accent-color)] hover:text-[var(--bg-color)] transition-colors px-1">MOIRE</a>
     </footer>
 </div>

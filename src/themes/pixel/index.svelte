@@ -152,7 +152,7 @@
 
   <footer class="mt-16 pb-2 text-center text-[10px] font-bold tracking-widest text-[var(--text-color)] opacity-70">
       <p class="uppercase">
-          © {new Date().getFullYear()} {config.author} <span class="mx-1 text-[var(--accent-color)]">♥</span> synced from Apple Notes and powered by <a href="https://moire.blog/" target="_blank" class="hover:text-[var(--accent-color)] transition-colors border-b-2 border-dotted border-[var(--text-color)] hover:border-[var(--accent-color)]">MOIRE.BLOG</a>
+          © {new Date().getFullYear()} {config.author} <span class="mx-1 text-[var(--accent-color)]">♥</span> synced from Apple Notes and powered by <a href="https://moire.ooooomo.com/" target="_blank" class="hover:text-[var(--accent-color)] transition-colors border-b-2 border-dotted border-[var(--text-color)] hover:border-[var(--accent-color)]">MOIRE</a>
       </p>
   </footer>
 
